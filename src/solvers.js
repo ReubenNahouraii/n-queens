@@ -16,16 +16,60 @@
 
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = []; 
+  
+  for (let rowIndex = 0; rowIndex < n; rowIndex++) {
+    // populate n by n array of arrays of 0s
+    solution.push(Array(n).fill(0));
+    // edit diagonal elements to all be 1s
+    solution[rowIndex][rowIndex] = 1; 
+  }
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
+window.makeDataCopy = function(arrayOfArrays) {
+  return arrayOfArrays.map(array => array.slice());
+};
+
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
 
+
+  solutionsArray = [];
+  // start by making board of all 0s
+  var solution = []; 
+  for (let rowIndex = 0; rowIndex < n; rowIndex++) {
+    solution.push(Array(n).fill(0));
+  }
+  let numPieces = 0;
+  let currentRow = 0;
+  let currentCol = 0; 
+  // placePiece(currentRow, currentCol) 
+    // check if currentRow or currentCol is out of bounds. If so, exit
+    // look for the first place that is a 0, and replace that 0 by a 1
+    // increment numPieces
+    // check if numPieces = n. 
+      // If so, check against our requirements for no col/row collisions. 
+        // If it passes, push to solutions array
+  
+        // return
+    
+
+    // increment currentCol and if currentCol is too big, take it mod n, and then increment currentRow
+    // while (currentRow and currentCol are both in bounds) {
+      // placePiece(currentRow, currentCol, numPieces, copyOfBoard) again
+      // increment currentCol and if currentCol is too big, take it mod n, and then increment currentRow
+      // placePiece again
+      // etc
+    // }
+      
+    
+  
+
+    
+  //var solutionCount = solutionsArray.length;
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
