@@ -132,7 +132,11 @@
       const matrix = this.rows();
       const numRows = this.rows().length;
       
-      let col = majorDiagonalColumnIndexAtFirstRow;
+      let colIndex = majorDiagonalColumnIndexAtFirstRow;
+      
+      if (colIndex >= numRows - 1) {
+        return false;
+      }
       
       if (majorDiagonalColumnIndexAtFirstRow === 0) {
         let sum = 0;
@@ -142,13 +146,26 @@
         return sum > 1;
       }
       
-      
+      let upperSum = 0;
+      let lowerSum = 0;
+      for (let rowIndex = 0; colIndex < numRows; rowIndex++, colIndex++) {
+        upperSum += matrix[rowIndex][colIndex];
+        lowerSum += matrix[colIndex][rowIndex];
+      }
+       
+      return !(upperSum <= 1 && lowerSum <= 1);
 
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return this.hasMajorDiagonalConflictAt(0) || this.hasMajorDiagonalConflictAt(this.rows().length - 1);
+      const numRows = this.rows().length;
+      for (let index = 0; index < numRows - 1; index++) {
+        if (this.hasMajorDiagonalConflictAt(index)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -158,12 +175,44 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      
+      const matrix = this.rows();
+      const numRows = this.rows().length;
+      
+      let colIndex = minorDiagonalColumnIndexAtFirstRow;
+      
+      if (colIndex > numRows - 1 || colIndex <= 0) {
+        return false;
+      }
+      
+      if (minorDiagonalColumnIndexAtFirstRow === numRows - 1) {
+        let sum = 0;
+        for (let rowIndex = 0, colIndex = numRows - 1; colIndex > 0; colIndex--, rowIndex++) {
+          sum += matrix[rowIndex][colIndex];
+        }
+        return sum > 1;
+      }
+      
+      let upperSum = 0;
+      let lowerSum = 0;
+      let count = numRows - 1 - colIndex;
+      for (let rowIndex = 0; colIndex >= 0; rowIndex++, colIndex--) {
+        upperSum += matrix[rowIndex][colIndex];
+        lowerSum += matrix[colIndex + count][rowIndex + count];
+      }
+       
+      return !(upperSum <= 1 && lowerSum <= 1);
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      const numRows = this.rows().length;
+      for (let index = 0; index < numRows - 1; index++) {
+        if (this.hasMinorDiagonalConflictAt(index)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
