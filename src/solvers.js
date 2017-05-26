@@ -29,32 +29,118 @@ window.findNRooksSolution = function(n) {
   return solution;
 };
 
-window.makeDataCopy = function(arrayOfArrays) {
-  return arrayOfArrays.map(array => array.slice());
+window.makeBoardCopy = function(board) {
+  
+  let copy = new Board({n: board.rows().length});
+  
+  for (let i = 0; i < board.attributes.n; i++) {
+    copy.attributes[i] = board.attributes[i].slice();
+  }
+    
+  return copy;
+  
+};
+
+// placePiece(currentRow, currentCol) 
+  // check if currentRow or currentCol is out of bounds. If so, exit
+  // look for the first place that is a 0, and replace that 0 by a 1
+  // increment numPieces
+  // check if numPieces = n. 
+    // If so, check against our requirements for no col/row collisions. 
+      // If it passes, push to solutions array
+
+      // return
+        
+window.placePiece = function(board, numPieces, currentRow, currentCol, solutionsArray) {
+  let n = board.attributes.n;
+  
+  console.log(board.attributes);
+  
+  // debugger;
+  if (currentRow > n - 1) {
+    return;
+  }
+  board.attributes[currentRow][currentCol] = 1;
+  let lastPlacedRow = currentRow;
+  let lastPlacedCol = currentCol;
+  
+  numPieces++;
+  
+  
+  if (numPieces === n) {
+    debugger;
+    if (!board.hasAnyRowConflicts() && !board.hasAnyColConflicts()) {
+      solutionsArray.push(board.rows());
+    }
+    return;
+  }
+  
+  currentCol++;
+  if (currentCol > n - 1) {
+    currentCol = 0;
+    currentRow++;
+  }
+  
+  // debugger;
+  
+  while (currentRow < n && currentCol < n) {
+    
+    window.placePiece(window.makeBoardCopy(board), numPieces, currentRow, currentCol, solutionsArray);
+    currentCol++;
+    if (currentCol > n - 1) {
+      currentCol = 0;
+      currentRow++;
+    }
+  }
+  
+  let lastRowFull = 1;
+  for (let i = 0; i < board.attributes.n; i++) {
+    lastRowFull *= board.attributes[n - 1][i];
+  }
+  
+  if (lastRowFull) {
+    return;
+  }
+  
+  // debugger;
+  board.attributes[lastPlacedRow][lastPlacedCol] = 0;
+  numPieces--;
+  
+  lastPlacedCol++;
+  if (lastPlacedCol > n - 1) {
+    lastPlacedCol = 0;
+    lastPlacedRow++;
+  }
+  window.placePiece(window.makeBoardCopy(board), numPieces, lastPlacedRow, lastPlacedCol, solutionsArray);
+  
+  
+  
+  debugger;
+  
+  
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
 
+  if (n === 1) {
+    return 1;
+  }
 
   solutionsArray = [];
   // start by making board of all 0s
-  var solution = []; 
-  for (let rowIndex = 0; rowIndex < n; rowIndex++) {
-    solution.push(Array(n).fill(0));
-  }
+  // let solution = []; 
+  // for (let rowIndex = 0; rowIndex < n; rowIndex++) {
+  //   solution.push(Array(n).fill(0));
+  // }
   let numPieces = 0;
   let currentRow = 0;
   let currentCol = 0; 
-  // placePiece(currentRow, currentCol) 
-    // check if currentRow or currentCol is out of bounds. If so, exit
-    // look for the first place that is a 0, and replace that 0 by a 1
-    // increment numPieces
-    // check if numPieces = n. 
-      // If so, check against our requirements for no col/row collisions. 
-        // If it passes, push to solutions array
+  // debugger;
+  n = 3;
+  window.placePiece(new Board({n:n}), numPieces, currentRow, currentCol, solutionsArray);
   
-        // return
+
     
 
     // increment currentCol and if currentCol is too big, take it mod n, and then increment currentRow
